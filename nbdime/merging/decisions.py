@@ -8,7 +8,6 @@ from __future__ import unicode_literals
 from six import string_types, text_type
 from six.moves import xrange as range
 import copy
-import nbformat
 
 from ..diff_format import (
     DiffOp, op_removerange, op_remove, op_patch, op_replace)
@@ -458,6 +457,4 @@ def apply_decisions(base, decisions):
             merged = patch(resolved, diffs)
         else:
             parent[last_key] = patch(resolved, diffs)
-
-    merged = nbformat.from_dict(merged)
     return merged

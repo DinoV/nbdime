@@ -8,7 +8,6 @@ from __future__ import print_function, unicode_literals
 from six import string_types
 import sys
 import copy
-import logging
 
 from ..diff_format import DiffOp, op_replace
 from ..patching import patch
@@ -17,7 +16,6 @@ from ..utils import join_path, star_path
 from .decisions import (pop_patch_decision, push_patch_decision, MergeDecision,
                         pop_all_patch_decisions, _sort_key)
 
-_logger = logging.getLogger(__name__)
 
 # FIXME: Move to utils
 def as_text_lines(text):
@@ -38,31 +36,13 @@ def format_text_merge_display(
     base = as_text_lines(base)
     remote = as_text_lines(remote)
 
-    n = 7  # git uses 7 by default
-
-    lines = []
+    n = 7  # git uses 7
     sep0 = "%s %s\n" % ("<"*n, local_title)
-    lines.append(sep0)
-    lines.extend(local)
-    if not lines[-1].endswith('\n'):
-        lines[-1] = lines[-1] + '\n'
+    sep1 = "%s %s\n" % ("="*n, base_title)
+    sep2 = "%s %s\n" % ("="*n, remote_title)
+    sep3 = "%s\n" % (">"*n,)
 
-    sep1 = "%s %s\n" % ("|"*n, base_title)
-    lines.append(sep1)
-    lines.extend(base)
-    if not lines[-1].endswith('\n'):
-        lines[-1] = lines[-1] + '\n'
-
-    sep2 = "%s\n" % ("="*n,)
-    lines.append(sep2)
-    lines.extend(remote)
-    if not lines[-1].endswith('\n'):
-        lines[-1] = lines[-1] + '\n'
-
-    sep3 = "%s %s" % (">"*n, remote_title)
-    lines.append(sep3)
-
-    return "".join(lines)
+    return "".join([sep0] + local + [sep1] + base + [sep2] + remote + [sep3])
 
 
 def add_conflicts_record(value, le, re):
@@ -183,7 +163,7 @@ def strategy2action_dict(local_base, le, re, strategy, path, dec):
     assert le is None or re is None or le.key == re.key
     key = le.key if re is None else re.key
 
-    _logger.warning('autoresolving conflict at %s with %s' % (path, strategy))
+    print('autoresolving conflict at %s with %s' % (path, strategy), file=sys.stderr)
 
     # Make a shallow copy of dec
     dec = copy.copy(dec)
