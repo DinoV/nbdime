@@ -434,19 +434,34 @@ x = 1
 y = 3
 z = 4
 print(x * y / z)
-||||||| base
-x = 1
-y = 3
-print(x * y)
 =======
 x = 1
-y = 3
+q = 3.1
 print(x + q)
 >>>>>>> remote"""
+    # With or without base:
+    # ||||||| base
+    # x = 1
+    # y = 3
+    # print(x * y)
 
     git_expected = """\
 x = 1
+<<<<<<< local
 y = 3
+z = 4
+print(x * y / z)
+=======
+q = 3.1
+print(x + q)
+>>>>>>> remote
+"""
+    expected = git_expected
+
+    # Currently getting this, which is just not right...
+    incorrect = """\
+x = 1
+q = 3.1
 <<<<<<< local
 z = 4
 print(x * y / z)
@@ -454,8 +469,6 @@ print(x * y / z)
 print(x + q)
 >>>>>>> remote
 """
-
-    expected = git_expected
 
     assert source == expected
 

@@ -123,7 +123,7 @@ def format_merge_render_lines(
     sep1 = "|"*marker_size
     sep2 = "="*marker_size
     sep3 = ">"*marker_size
-    
+
     lines = []
     sep0 = "%s %s\n" % (sep0, local_title)
     lines.append(sep0)

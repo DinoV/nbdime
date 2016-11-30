@@ -604,15 +604,15 @@ def test_merge_input_strategy_inline_source_conflict():
        "lines\n",
        "to align\n",
        ]]
-    # Current case:
-    _expected_partial = [[
-        "<<<<<<< local\n",
-        "local\nsome other\nlines\nto align\n",
-        "||||||| base\n",
-        "base\nsome other\nlines\nto align\n",
-        "=======\n",
-        "remote\nsome other\nlines\nto align\n",
-        ">>>>>>> remote"]]
+    # Old case:
+    # _expected_partial = [[
+    #     "<<<<<<< local\n",
+    #     "local\nsome other\nlines\nto align\n",
+    #     "||||||| base\n",
+    #     "base\nsome other\nlines\nto align\n",
+    #     "=======\n",
+    #     "remote\nsome other\nlines\nto align\n",
+    #     ">>>>>>> remote"]]
     expected_conflicts = [{
         "common_path": ("cells", 0),
         "local_diff": [
@@ -626,9 +626,29 @@ def test_merge_input_strategy_inline_source_conflict():
                 op_addrange(
                     0, remote[0][0:1]),
                 op_removerange(0, 1)],
-
             )],
         }]
+    # expected_conflicts = [{
+    #     "common_path": ("cells", 0, "source"),
+    #     "local_diff": [
+    #         op_patch('source', [
+    #             op_addrange(
+    #                 0, local[0][0:1]),
+    #             op_removerange(0, 1)],
+    #         )],
+    #     "remote_diff": [
+    #         op_patch('source', [
+    #             op_addrange(
+    #                 0, remote[0][0:1]),
+    #             op_removerange(0, 1)],
+    #         )],
+    #     "custom_diff": [
+    #         op_patch('source', [
+    #             op_addrange(
+    #                 0, expected_partial[0][:5]),
+    #             op_removerange(0, 1)],
+    #         )],
+    #     }]
     merge_args = copy.deepcopy(args)
     merge_args.merge_strategy = "use-base"
     merge_args.input_strategy = "inline"

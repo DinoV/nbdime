@@ -95,15 +95,19 @@ def make_inline_outputs_value(value, le, re,
     def output_marker(text):
         return nbformat.v4.new_output("stream", name="stderr", text=text)
 
+    marker_size = 7
+    sep0 = "<"*marker_size
+    sep1 = "|"*marker_size
+    sep2 = "="*marker_size
+    sep3 = ">"*marker_size
+
+    sep0 = "%s %s\n" % (sep0, local_title)
+    sep1 = "%s %s\n" % (sep1, base_title)
+    sep2 = "%s\n" % (sep2,)
+    sep3 = "%s %s" % (sep3, remote_title)
+
     # Note: This is very notebook specific while the rest of this file is more generic
     outputs = []
-
-    n = 7
-    sep0 = "%s %s\n" % ("<"*n, local_title)
-    sep1 = "%s %s\n" % ("|"*n, base_title)
-    sep2 = "%s\n" % ("="*n,)
-    sep3 = "%s %s" % (">"*n, remote_title)
-
     outputs.append(output_marker(sep0))
     outputs.extend(local)
     outputs.append(output_marker(sep1))
@@ -158,10 +162,12 @@ def _analyse_edited_lines(baselines, patch_op):
         else:
             raise ValueError("Invalid item patch op {}".format(e.op))
 
+    lines = addlines + lines
     return lines, deleted_min, deleted_max
 
 
 def make_inline_source_value(base, le, re):
+    orig = base
     base = base.splitlines(True)
 
     #base = source string
@@ -182,6 +188,8 @@ def make_inline_source_value(base, le, re):
     begin = min(local_deleted_min, remote_deleted_max)
     end = max(remote_deleted_max, local_deleted_max)
     base = base[begin:end]
+
+    if 0: import ipdb; ipdb.set_trace()
 
     # TODO: When using external merge renderer, probably want to
     # apply to the entire source string with all changes incorporated,
